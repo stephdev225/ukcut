@@ -12,7 +12,6 @@ export const site = {
   bookingUk: 'https://fr.fresha.com/book-now/salon-lowtown-utptlo3b/services?lid=766773&eid=2002042&pId=720506',
   reviews: 'https://www.fresha.com/fr/a/barbershop-ukcut-quebec-639-rue-saint-francois-est-wdp7ek8j',
   maps: 'https://www.google.com/maps/search/?api=1&query=832+rue+Saint-Joseph+Est%2C+Qu%C3%A9bec%2C+QC+G1K+3C9',
-  mapsEmbed: 'https://www.google.com/maps?q=832+rue+Saint-Joseph+Est,+Qu%C3%A9bec,+QC+G1K+3C9&output=embed',
   instagram: 'https://www.instagram.com/ukcut1/',
   instagramShop: 'https://www.instagram.com/barbershop_chezukcut/',
   tiktok: 'https://www.tiktok.com/@ukcut1',

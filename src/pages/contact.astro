@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import floor from '../assets/img/shop-floor.jpg';
 import PageHead from '../components/PageHead.astro';
 import Icon from '../components/Icon.astro';
 import { site, hours, amenities } from '../data/site';
@@ -43,8 +45,13 @@ import { site, hours, amenities } from '../data/site';
         </div>
         <div data-reveal><a class="back" style="color:var(--ink)" href="/"><Icon name="left" /> Retour à l’accueil</a></div>
       </div>
-      <a class="map" href={site.maps} target="_blank" rel="noopener" aria-label="Ouvrir l’itinéraire dans Google Maps" data-reveal style="--i:1">
-        <iframe title="Carte : 832 rue Saint-Joseph Est, Québec" src={site.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="pointer-events:none"></iframe>
+      <a class="frame map" href={site.maps} target="_blank" rel="noopener" data-reveal style="--i:1">
+        <Image src={floor} alt="L’intérieur du salon, au 832 rue Saint-Joseph Est" widths={[480, 800, 934]} sizes="(min-width: 900px) 46vw, 100vw" quality={76} loading="lazy" />
+        <span class="map__card">
+          <span class="eyebrow">Itinéraire</span>
+          <span class="display h-md">832, rue Saint-Joseph Est</span>
+          <span class="link">Ouvrir dans Google Maps <Icon name="up" /></span>
+        </span>
       </a>
     </div>
   </section>
