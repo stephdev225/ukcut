@@ -1,0 +1,23 @@
+---
+import { site, hours } from '../data/site';
+import Icon from './Icon.astro';
+const { light = false } = Astro.props;
+const fmt = (h: number) => `${h} h`;
+---
+<div class:list={['visit', { 'on-light': light }]}>
+  <div data-reveal>
+    <p class="eyebrow">Nous trouver</p>
+    <h2 class="display h-lg" style="margin:14px 0 18px">Passe au <span class="serif">salon.</span></h2>
+    <address class="addr">{site.street}<br />{site.city}<br /><span class="muted">Quartier {site.district}</span></address>
+    <p class="status" data-status style="margin-top:18px"><i></i><span>Ouvert 7 jours sur 7</span></p>
+    <div class="visit__cta">
+      <a class:list={['btn', light ? '' : 'btn--light']} href={site.booking} target="_blank" rel="noopener">Réserver <Icon name="right" /></a>
+      <a class:list={['btn', 'btn--ghost', { 'on-light': light }]} href={site.maps} target="_blank" rel="noopener">Itinéraire <Icon name="up" /></a>
+    </div>
+  </div>
+  <ul class="hours" data-hours data-reveal style="--i:1">
+    {hours.map((h) => (
+      <li data-d={h.d}><span>{h.day}</span><span>{fmt(h.open)} – {fmt(h.close)}</span></li>
+    ))}
+  </ul>
+</div>

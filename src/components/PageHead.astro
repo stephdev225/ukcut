@@ -1,0 +1,12 @@
+---
+import Icon from './Icon.astro';
+const { eyebrow, back = '/', backLabel = 'Retour à l’accueil' } = Astro.props;
+---
+<header class="phead">
+  <div class="wrap">
+    <a class="back" href={back}><Icon name="left" /> {backLabel}</a>
+    <p class="eyebrow" style="display:flex;margin-top:22px">{eyebrow}</p>
+    <h1 class="display h-xl"><slot name="title" /></h1>
+    <p class="lead"><slot /></p>
+  </div>
+</header>

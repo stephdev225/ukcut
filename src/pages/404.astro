@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="Page introuvable">
+  <section class="dark sec" style="min-height:70svh;display:grid;align-items:center">
+    <div class="wrap" style="display:grid;gap:18px;justify-items:start">
+      <p class="eyebrow">Erreur 404</p>
+      <h1 class="display h-xl">Mauvaise <span class="serif">adresse.</span></h1>
+      <p class="lead muted">Cette page n’existe pas ou a été déplacée.</p>
+      <a class="btn btn--light btn--back" href="/"><Icon name="left" /> Retour à l’accueil</a>
+    </div>
+  </section>
+</Base>

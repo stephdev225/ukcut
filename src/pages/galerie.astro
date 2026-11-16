@@ -1,0 +1,59 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Cta from '../components/Cta.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import flow from '../assets/img/cut-flow.jpg';
+import floor from '../assets/img/shop-floor.jpg';
+import glasses from '../assets/img/cut-glasses.jpg';
+import bw from '../assets/img/cut-bw.jpg';
+import hero from '../assets/img/hero-shop.jpg';
+import taper from '../assets/img/cut-taper.jpg';
+import fade from '../assets/img/cut-fade.jpg';
+import chair from '../assets/img/shop-chair.jpg';
+import wall from '../assets/img/ukcut-wall.jpg';
+import plant from '../assets/img/ukcut-plant.jpg';
+
+const items = [
+  { src: flow, alt: 'Dégradé bas et mèche texturée' },
+  { src: hero, alt: 'Le salon, vue d’ensemble' },
+  { src: glasses, alt: 'Coupe afro sculptée et barbe taillée' },
+  { src: bw, alt: 'Burst fade texturé' },
+  { src: taper, alt: 'Taper fade et lineup' },
+  { src: floor, alt: 'Les postes de coupe' },
+  { src: fade, alt: 'Dégradé haut et barbe' },
+  { src: wall, alt: 'UKCUT, maître barbier' },
+  { src: chair, alt: 'Fauteuil de barbier' },
+  { src: plant, alt: 'UKCUT au salon' },
+];
+const full = await Promise.all(items.map((it) => getImage({ src: it.src, width: Math.min(it.src.width, 1401), quality: 82 })));
+---
+<Base title="Galerie" description="Coupes, fades, tapers et l’intérieur du Barbershop Chez UKCUT à Québec, en photos.">
+  <PageHead eyebrow="Galerie">
+    <Fragment slot="title">Le <span class="serif">travail.</span></Fragment>
+    Des coupes sorties du salon et l’espace où elles se font. Touche une photo pour l’agrandir.
+  </PageHead>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="grid">
+        {items.map((it, i) => (
+          <button data-lb={full[i].src} data-alt={it.alt} aria-label={`Agrandir : ${it.alt}`} data-reveal style={`--i:${i % 3}`}>
+            <span class="frame" style="display:block"><Image src={it.src} alt={it.alt} widths={[360, 640, 934]} sizes="(min-width: 900px) 30vw, 50vw" quality={76} loading={i < 4 ? 'eager' : 'lazy'} /></span>
+          </button>
+        ))}
+      </div>
+      <p style="margin-top:28px" data-reveal><a class="link" href={site.instagram} target="_blank" rel="noopener">Plus de coupes sur Instagram <Icon name="up" /></a></p>
+    </div>
+  </section>
+
+  <dialog class="lb" aria-label="Photo agrandie">
+    <div class="lb__top"><span data-lb-count>01 / 10</span><button data-lb-close aria-label="Fermer"><Icon name="close" /></button></div>
+    <div class="lb__stage"><img src="" alt="" /></div>
+    <div class="lb__bot"><span data-lb-cap></span><span class="lb__nav"><button data-lb-prev aria-label="Photo précédente"><Icon name="left" /></button><button data-lb-next aria-label="Photo suivante"><Icon name="right" /></button></span></div>
+  </dialog>
+
+  <Cta />
+</Base>

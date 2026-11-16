@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { site, hours, amenities } from '../data/site';
+---
+<Base title="Contact et horaires" description="Barbershop Chez UKCUT, 832 rue Saint-Joseph Est, Québec (Saint-Roch). Horaires, itinéraire et réservation en ligne.">
+  <PageHead eyebrow="Contact et horaires">
+    <Fragment slot="title">On se <span class="serif">voit.</span></Fragment>
+    Au 832, rue Saint-Joseph Est, dans Saint-Roch. Ouvert sept jours sur sept, avec ou sans rendez-vous.
+  </PageHead>
+
+  <section class="sec on-light">
+    <div class="wrap contact">
+      <div style="display:grid;gap:28px">
+        <div class="cblock" data-reveal>
+          <p class="eyebrow">Adresse</p>
+          <address class="addr">{site.street}<br />{site.city}</address>
+          <p class="status" data-status><i></i><span>Ouvert 7 jours sur 7</span></p>
+          <div class="visit__cta" style="margin-top:6px">
+            <a class="btn" href={site.booking} target="_blank" rel="noopener">Réserver sur Fresha <Icon name="right" /></a>
+            <a class="btn btn--ghost on-light" href={site.maps} target="_blank" rel="noopener">Itinéraire <Icon name="up" /></a>
+          </div>
+        </div>
+        <div class="cblock" data-reveal>
+          <p class="eyebrow">Horaires</p>
+          <ul class="hours" data-hours>
+            {hours.map((h) => <li data-d={h.d}><span>{h.day}</span><span>{h.open} h – {h.close} h</span></li>)}
+          </ul>
+        </div>
+        <div class="cblock" data-reveal>
+          <p class="eyebrow">Bon à savoir</p>
+          <ul class="tags">{amenities.map((a) => <li>{a}</li>)}</ul>
+        </div>
+        <div class="cblock" data-reveal>
+          <p class="eyebrow">Nous suivre</p>
+          <div class="socials">
+            <a href={site.instagram} target="_blank" rel="noopener">Instagram · @ukcut1 <Icon name="up" /></a>
+            <a href={site.instagramShop} target="_blank" rel="noopener">Instagram · @barbershop_chezukcut <Icon name="up" /></a>
+            <a href={site.tiktok} target="_blank" rel="noopener">TikTok · @ukcut1 <Icon name="up" /></a>
+            <a href={site.reviews} target="_blank" rel="noopener">Avis clients sur Fresha <Icon name="up" /></a>
+          </div>
+        </div>
+        <div data-reveal><a class="back" style="color:var(--ink)" href="/"><Icon name="left" /> Retour à l’accueil</a></div>
+      </div>
+      <a class="map" href={site.maps} target="_blank" rel="noopener" aria-label="Ouvrir l’itinéraire dans Google Maps" data-reveal style="--i:1">
+        <iframe title="Carte : 832 rue Saint-Joseph Est, Québec" src={site.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="pointer-events:none"></iframe>
+      </a>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,141 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Visit from '../components/Visit.astro';
+import { site, services, styles, amenities } from '../data/site';
+import hero from '../assets/img/hero-shop.jpg';
+import wall from '../assets/img/ukcut-wall.jpg';
+import floor from '../assets/img/shop-floor.jpg';
+import chair from '../assets/img/shop-chair.jpg';
+import fade from '../assets/img/cut-fade-c.jpg';
+import flow from '../assets/img/cut-flow-c.jpg';
+import glasses from '../assets/img/cut-glasses-c.jpg';
+import taper from '../assets/img/cut-taper-c.jpg';
+import bw from '../assets/img/cut-bw-c.jpg';
+
+const all = services.flatMap((g) => g.items);
+const pick = ['Coupe', 'Coupe et barbe', 'Transformation', 'Rasage à la lame', 'Coupe avec UKCUT'].map((n) => all.find((s) => s.name === n)!);
+const rail = [
+  { src: flow, alt: 'Dégradé bas et mèche texturée, client sous la cape UKCUT' },
+  { src: glasses, alt: 'Coupe afro sculptée et barbe taillée' },
+  { src: taper, alt: 'Taper fade et lineup, vue de profil' },
+  { src: fade, alt: 'Dégradé haut et barbe, devant le mur de béton du salon' },
+  { src: bw, alt: 'Burst fade texturé, portrait noir et blanc' },
+  { src: floor, alt: 'Le salon et son plafond lumineux hexagonal' },
+];
+---
+<Base>
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__media" data-parallax>
+        <Image src={hero} alt="L’intérieur du Barbershop Chez UKCUT : plafond lumineux hexagonal, murs de béton et carreaux verts" widths={[480, 800, 1100, 1401]} sizes="(min-width: 900px) 46vw, 100vw" loading="eager" fetchpriority="high" quality={78} />
+      </div>
+      <div class="hero__body">
+        <p class="eyebrow">{site.district} · Québec</p>
+        <h1 class="display h-xl">
+          <span class="hero__line"><span>Plus qu’une</span></span>
+          <span class="hero__line"><span class="serif">coupe.</span></span>
+        </h1>
+        <p class="lead hero__sub">La confiance que tu portes en sortant. Fades, tapers, barbe, tresses et twists, au cœur de Saint-Roch.</p>
+        <div class="hero__cta">
+          <a class="btn btn--light" href={site.booking} target="_blank" rel="noopener">Réserver <Icon name="right" /></a>
+          <a class="btn btn--ghost" href="/services/">Voir les services</a>
+        </div>
+        <div class="hero__meta">
+          <a href={site.reviews} target="_blank" rel="noopener"><b>{site.rating} ★</b> · {site.reviewCount} avis sur Fresha</a>
+          <span class="status" data-status><i></i><span>Ouvert 7 jours sur 7</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tile marquee" aria-label="Styles réalisés au salon">
+    <div class="marquee__track">
+      <ul>{styles.map((s) => <li>{s}</li>)}</ul>
+      <ul aria-hidden="true">{styles.map((s) => <li>{s}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap about">
+      <div class="about__text">
+        <p class="eyebrow" data-reveal>Chez UKCUT</p>
+        <p class="about__big" data-reveal style="--i:1">Un salon où tout le monde se sent <span class="serif">comme à la maison.</span> Tous les services essentiels sous un même toit : barbier, tresses, twists.</p>
+        <div class="stats" data-reveal style="--i:2">
+          <div><b>{site.rating}</b><span>sur 5, {site.reviewCount} avis Fresha</span></div>
+          <div><b>7+</b><span>barbiers et coiffeurs</span></div>
+          <div><b>7/7</b><span>jours, avec ou sans rendez-vous</span></div>
+        </div>
+        <div data-reveal style="--i:3"><a class="link" href="/equipe/">Rencontrer l’équipe <Icon name="right" /></a></div>
+      </div>
+      <a class="frame frame--shade about__img" href="/equipe/" data-reveal style="--i:1">
+        <Image src={wall} alt="UKCUT, maître barbier et propriétaire, adossé au mur de béton du salon" widths={[420, 700, 934]} sizes="(min-width: 900px) 36vw, 100vw" quality={78} />
+        <span class="cap">UKCUT · Maître barbier</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="dark sec">
+    <div class="wrap">
+      <div class="shead">
+        <p class="eyebrow" data-reveal>Services</p>
+        <div class="shead__row" data-reveal style="--i:1">
+          <h2 class="display h-lg">Le menu.</h2>
+          <a class="link" href="/services/">Tous les services <Icon name="right" /></a>
+        </div>
+      </div>
+      <div class="slist" data-peek-zone>
+        {pick.map((s, i) => (
+          <a class="srow" href={site.booking} target="_blank" rel="noopener" data-peek={i} data-reveal style={`--i:${i}`}>
+            <span class="srow__name">{s.name}</span>
+            <span class="srow__meta">{s.time}{s.note ? ` · ${s.note}` : ''}</span>
+            <span class="srow__price">{s.price} <Icon name="up" /></span>
+          </a>
+        ))}
+      </div>
+      <p class="note muted">Tarifs en dollars canadiens, confirmés au moment de réserver sur Fresha.</p>
+    </div>
+    <div class="peek" aria-hidden="true">
+      {[flow, glasses, taper, fade, bw].map((im) => <Image src={im} alt="" width={460} quality={70} loading="lazy" />)}
+    </div>
+  </section>
+
+  <section class="sec" style="padding-inline:0">
+    <div class="wrap">
+      <div class="shead">
+        <p class="eyebrow" data-reveal>Galerie</p>
+        <div class="shead__row" data-reveal style="--i:1">
+          <h2 class="display h-lg">Le travail <span class="serif">parle.</span></h2>
+          <div class="railnav">
+            <button data-rail-prev="home" aria-label="Photos précédentes"><Icon name="left" /></button>
+            <button data-rail-next="home" aria-label="Photos suivantes"><Icon name="right" /></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rail" data-rail="home" data-reveal>
+      {rail.map((r) => (
+        <a href="/galerie/" class="frame"><Image src={r.src} alt={r.alt} widths={[330, 660]} sizes="330px" quality={76} loading="lazy" draggable="false" /></a>
+      ))}
+      <a href="/galerie/" class="rail__end"><span class="display h-md">Toute la<br />galerie</span><span class="link" style="justify-self:center">Voir <Icon name="right" /></span></a>
+    </div>
+  </section>
+
+  <section class="dark sec">
+    <div class="wrap place">
+      <div class="place__text">
+        <p class="eyebrow" data-reveal>Le lieu</p>
+        <h2 class="display h-lg" data-reveal style="--i:1">832, <span class="serif">Saint-Joseph.</span></h2>
+        <p class="muted" data-reveal style="--i:2">Béton brut, carreaux verts et un plafond de lumière qu’on reconnaît de la rue. Un espace pensé pour prendre son temps.</p>
+        <ul class="ticks" data-reveal style="--i:3">{amenities.map((a) => <li>{a}</li>)}</ul>
+      </div>
+      <a class="frame place__a" href="/contact/" data-reveal><Image src={floor} alt="Les postes de coupe sous le plafond hexagonal" widths={[300, 500, 934]} sizes="(min-width: 900px) 28vw, 50vw" quality={76} loading="lazy" /></a>
+      <a class="frame place__b" href="/contact/" data-reveal style="--i:1"><Image src={chair} alt="Fauteuil de barbier et miroir en bois dans le salon" widths={[300, 500, 934]} sizes="(min-width: 900px) 28vw, 50vw" quality={76} loading="lazy" /></a>
+    </div>
+  </section>
+
+  <section class="tile sec">
+    <div class="wrap"><Visit /></div>
+  </section>
+</Base>

@@ -1,0 +1,19 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+import Hex from './Hex.astro';
+const { back = true } = Astro.props;
+---
+<section class="tile sec cta">
+  <Hex data-reveal />
+  <div class="wrap cta__in">
+    <div data-reveal>
+      <p class="eyebrow">Réservation en ligne</p>
+      <h2 class="display h-lg" style="margin-top:14px">Ta chaise <span class="serif">t’attend.</span></h2>
+    </div>
+    <div data-reveal style="--i:1;display:flex;flex-wrap:wrap;gap:10px">
+      <a class="btn btn--light" href={site.booking} target="_blank" rel="noopener">Réserver sur Fresha <Icon name="right" /></a>
+      {back && <a class="btn btn--ghost btn--back" href="/"><Icon name="left" /> Retour à l’accueil</a>}
+    </div>
+  </div>
+</section>

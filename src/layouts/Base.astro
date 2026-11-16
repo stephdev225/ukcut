@@ -1,0 +1,238 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { site, hours, nav } from '../data/site';
+import Icon from '../components/Icon.astro';
+
+const { title, description = 'Barbershop Chez UKCUT, 832 rue Saint-Joseph Est à Québec. Coupes, fades, barbe, tresses et twists. Avec ou sans rendez-vous, 7 jours sur 7.' } = Astro.props;
+const path = Astro.url.pathname;
+const full = title ? `${title} · ${site.name}` : `${site.name} · Barbier à Québec, Saint-Roch`;
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'BarberShop',
+  name: site.name,
+  url: 'https://ukcut.vercel.app',
+  address: { '@type': 'PostalAddress', streetAddress: '832 rue Saint-Joseph Est', addressLocality: 'Québec', addressRegion: 'QC', postalCode: 'G1K 3C9', addressCountry: 'CA' },
+  sameAs: [site.instagram, site.tiktok],
+};
+---
+<!doctype html>
+<html lang="fr-CA" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{full}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#101113" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <meta property="og:title" content={full} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_CA" />
+    <meta property="og:image" content={new URL('/og.jpg', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+    <ClientRouter />
+  </head>
+  <body data-hours-json={JSON.stringify(hours)}>
+    <header class="nav">
+      <div class="wrap nav__in">
+        <a class="brand" href="/" aria-label="Barbershop Chez UKCUT, accueil"><b>UKCUT</b><span>Barbershop</span></a>
+        <nav class="nav__links" aria-label="Navigation principale">
+          {nav.map((n) => <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>)}
+        </nav>
+        <div class="nav__right">
+          <a class="btn btn--light" href={site.booking} target="_blank" rel="noopener">Réserver</a>
+          <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu"><span><i></i><i></i></span></button>
+        </div>
+      </div>
+    </header>
+
+    <div class="menu" id="menu" aria-hidden="true">
+      <nav class="menu__links" aria-label="Menu">
+        <a href="/">Accueil <small>01</small></a>
+        {nav.map((n, i) => <a href={n.href}>{n.label} <small>0{i + 2}</small></a>)}
+      </nav>
+      <div class="menu__foot">
+        <p class="status" data-status><i></i><span>Ouvert 7 jours sur 7</span></p>
+        <p>{site.street}, {site.city}</p>
+        <a class="btn btn--light" href={site.booking} target="_blank" rel="noopener">Réserver sur Fresha <Icon name="right" /></a>
+      </div>
+    </div>
+
+    <main><slot /></main>
+
+    <footer class="foot">
+      <div class="wrap">
+        <div class="foot__grid">
+          <a href="/" class="foot__brand" aria-label="UKCUT, accueil">UKCUT</a>
+          <div class="foot__cols">
+            <div>
+              <h2>Le salon</h2>
+              <ul>
+                <li>{site.street}</li>
+                <li>{site.city}</li>
+                <li><a href={site.maps} target="_blank" rel="noopener">Itinéraire</a></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Pages</h2>
+              <ul>
+                {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+                <li><a href={site.booking} target="_blank" rel="noopener">Réserver</a></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Suivre</h2>
+              <ul>
+                <li><a href={site.instagram} target="_blank" rel="noopener">Instagram</a></li>
+                <li><a href={site.tiktok} target="_blank" rel="noopener">TikTok</a></li>
+                <li><a href={site.reviews} target="_blank" rel="noopener">Avis Fresha</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="foot__legal">
+          <span>© {new Date().getFullYear()} {site.name}</span>
+          <span>Photos : @ukcut1</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const DAYS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+
+      function nowInQuebec() {
+        const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Toronto', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date());
+        const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+        const d = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+        return { d, t: Number(get('hour')) + Number(get('minute')) / 60 };
+      }
+
+      function initStatus() {
+        let hours: { d: number; open: number; close: number }[] = [];
+        try { hours = JSON.parse(document.body.dataset.hoursJson || '[]'); } catch {}
+        if (!hours.length) return;
+        const { d, t } = nowInQuebec();
+        const today = hours.find((h) => h.d === d);
+        const open = !!today && t >= today.open && t < today.close;
+        let label = '';
+        if (open && today) label = `Ouvert · ferme à ${today.close} h`;
+        else if (today && t < today.open) label = `Fermé · ouvre à ${today.open} h`;
+        else {
+          const next = hours.find((h) => h.d === (d + 1) % 7);
+          label = next ? `Fermé · ouvre ${DAYS[next.d]} à ${next.open} h` : 'Fermé';
+        }
+        document.querySelectorAll<HTMLElement>('[data-status]').forEach((el) => {
+          el.dataset.open = String(open);
+          const s = el.querySelector('span');
+          if (s) s.textContent = label;
+        });
+        document.querySelectorAll<HTMLElement>('[data-hours] li').forEach((li) => li.classList.toggle('is-today', Number(li.dataset.d) === d));
+      }
+
+      function initMenu() {
+        const burger = document.querySelector<HTMLButtonElement>('.burger');
+        const menu = document.getElementById('menu');
+        if (!burger || !menu) return;
+        const set = (on: boolean) => {
+          menu.classList.toggle('is-open', on);
+          menu.setAttribute('aria-hidden', String(!on));
+          burger.setAttribute('aria-expanded', String(on));
+          burger.setAttribute('aria-label', on ? 'Fermer le menu' : 'Ouvrir le menu');
+          document.documentElement.style.overflow = on ? 'hidden' : '';
+        };
+        set(false);
+        burger.onclick = () => set(burger.getAttribute('aria-expanded') !== 'true');
+        menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => set(false)));
+        document.onkeydown = (e) => { if (e.key === 'Escape') set(false); };
+      }
+
+      function initReveal() {
+        const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+        if (!('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('is-in')); return; }
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        els.forEach((e) => io.observe(e));
+      }
+
+      let raf = 0;
+      function initParallax() {
+        const img = document.querySelector<HTMLElement>('[data-parallax] img');
+        cancelAnimationFrame(raf);
+        if (!img || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const tick = () => {
+          const y = Math.min(window.scrollY, 900);
+          img.style.transform = `translate3d(0, ${(-y * 0.06).toFixed(1)}px, 0)`;
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      }
+
+      function initPeek() {
+        const zone = document.querySelector<HTMLElement>('[data-peek-zone]');
+        const peek = document.querySelector<HTMLElement>('.peek');
+        if (!zone || !peek) return;
+        const imgs = peek.querySelectorAll('img');
+        zone.addEventListener('pointermove', (e) => { peek.style.left = `${e.clientX + 150}px`; peek.style.top = `${e.clientY}px`; });
+        zone.querySelectorAll<HTMLElement>('[data-peek]').forEach((row) => {
+          row.addEventListener('pointerenter', () => {
+            const i = Number(row.dataset.peek) % imgs.length;
+            imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
+            peek.classList.add('is-on');
+          });
+        });
+        zone.addEventListener('pointerleave', () => peek.classList.remove('is-on'));
+      }
+
+      function initRail() {
+        document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
+          let down = false, startX = 0, startL = 0, moved = 0;
+          rail.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; down = true; moved = 0; startX = e.clientX; startL = rail.scrollLeft; });
+          window.addEventListener('pointermove', (e) => {
+            if (!down) return;
+            const dx = e.clientX - startX; moved = Math.abs(dx);
+            if (moved > 6) rail.classList.add('is-drag');
+            rail.scrollLeft = startL - dx;
+          });
+          window.addEventListener('pointerup', () => { if (!down) return; down = false; setTimeout(() => rail.classList.remove('is-drag'), 0); });
+          rail.addEventListener('click', (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+          const step = () => (rail.querySelector<HTMLElement>('a')?.offsetWidth ?? 320) + 12;
+          const id = rail.dataset.rail;
+          document.querySelector(`[data-rail-prev="${id}"]`)?.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+          document.querySelector(`[data-rail-next="${id}"]`)?.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+        });
+      }
+
+      function initLightbox() {
+        const lb = document.querySelector<HTMLDialogElement>('dialog.lb');
+        if (!lb) return;
+        const items = [...document.querySelectorAll<HTMLElement>('[data-lb]')];
+        const img = lb.querySelector<HTMLImageElement>('img')!;
+        const count = lb.querySelector<HTMLElement>('[data-lb-count]')!;
+        const cap = lb.querySelector<HTMLElement>('[data-lb-cap]')!;
+        let i = 0;
+        const show = (n: number) => {
+          i = (n + items.length) % items.length;
+          img.src = items[i].dataset.lb!;
+          img.alt = items[i].dataset.alt || '';
+          cap.textContent = items[i].dataset.alt || '';
+          count.textContent = `${String(i + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
+        };
+        items.forEach((el, n) => el.addEventListener('click', () => { show(n); lb.showModal(); }));
+        lb.querySelector('[data-lb-close]')?.addEventListener('click', () => lb.close());
+        lb.querySelector('[data-lb-prev]')?.addEventListener('click', () => show(i - 1));
+        lb.querySelector('[data-lb-next]')?.addEventListener('click', () => show(i + 1));
+        lb.addEventListener('click', (e) => { if ((e.target as HTMLElement).classList.contains('lb__stage')) lb.close(); });
+        lb.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(i - 1); if (e.key === 'ArrowRight') show(i + 1); });
+      }
+
+      document.addEventListener('astro:page-load', () => {
+        initStatus(); initMenu(); initReveal(); initParallax(); initPeek(); initRail(); initLightbox();
+      });
+    </script>
+  </body>
+</html>

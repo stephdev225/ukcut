@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Cta from '../components/Cta.astro';
+import Icon from '../components/Icon.astro';
+import { site, services } from '../data/site';
+---
+<Base title="Services et tarifs" description="Coupe, coupe et barbe, rasage à la lame, contours, tresses, twists et locks. Les services et tarifs du Barbershop Chez UKCUT à Québec.">
+  <PageHead eyebrow="Services et tarifs">
+    <Fragment slot="title">Le <span class="serif">menu.</span></Fragment>
+    Choisis ton service, puis ton barbier. La réservation se fait en ligne sur Fresha, avec confirmation instantanée.
+  </PageHead>
+
+  <section class="sec on-light">
+    <div class="wrap">
+      {services.map((g, gi) => (
+        <div class="sgroup">
+          <div class="sgroup__head" data-reveal>
+            <p class="eyebrow">0{gi + 1}</p>
+            <h2 class="display h-md">{g.title}</h2>
+            <p class="muted">{g.blurb}</p>
+          </div>
+          <div class="slist">
+            {g.items.map((s, i) => (
+              <a class="srow" href={site.booking} target="_blank" rel="noopener" data-reveal style={`--i:${i}`}>
+                <span class="srow__name">{s.name}</span>
+                <span class="srow__meta">{s.time}{s.note ? ` · ${s.note}` : ''}</span>
+                <span class="srow__price">{s.price} <Icon name="up" /></span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+      <p class="note muted">Tarifs en dollars canadiens, à titre indicatif. Le prix final et la durée sont confirmés au moment de réserver sur Fresha.</p>
+    </div>
+  </section>
+
+  <Cta />
+</Base>

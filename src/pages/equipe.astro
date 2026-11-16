@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Cta from '../components/Cta.astro';
+import Icon from '../components/Icon.astro';
+import { site, team } from '../data/site';
+import plant from '../assets/img/ukcut-plant.jpg';
+import award from '../assets/img/ukcut-award.jpg';
+---
+<Base title="L’équipe" description="UKCUT, maître barbier et propriétaire, et son équipe de barbiers et coiffeurs au 832 rue Saint-Joseph Est à Québec.">
+  <PageHead eyebrow="L’équipe">
+    <Fragment slot="title">Les <span class="serif">mains.</span></Fragment>
+    Une équipe de plus de sept barbiers et coiffeurs, menée par UKCUT. Tu choisis avec qui tu réserves.
+  </PageHead>
+
+  <section class="sec">
+    <div class="wrap owner">
+      <figure class="frame frame--shade owner__img" data-reveal>
+        <Image src={plant} alt="UKCUT debout dans son salon, près d’une plante et d’un fauteuil blanc" widths={[420, 700, 934]} sizes="(min-width: 900px) 38vw, 100vw" quality={78} loading="eager" />
+        <figcaption>UKCUT · Propriétaire</figcaption>
+      </figure>
+      <div class="owner__text">
+        <p class="eyebrow" data-reveal>Le fondateur</p>
+        <h2 class="display h-lg" data-reveal style="--i:1">UKCUT</h2>
+        <p class="lead" data-reveal style="--i:2">Barbier de la ville de Québec. Maître barbier, formateur et entrepreneur, il a bâti un salon à son image : exigeant sur le détail, ouvert à tout le monde.</p>
+        <ul class="tags" data-reveal style="--i:3">
+          <li>Maître barbier</li><li>Formateur</li><li>Entrepreneur</li><li>DJ</li><li>Coach de basketball</li>
+        </ul>
+        <div data-reveal style="--i:4;display:flex;flex-wrap:wrap;gap:10px">
+          <a class="btn" href={site.bookingUk} target="_blank" rel="noopener">Réserver avec UKCUT <Icon name="right" /></a>
+          <a class="btn btn--ghost on-light" href={site.instagram} target="_blank" rel="noopener">Instagram <Icon name="up" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark sec">
+    <div class="wrap">
+      <div class="shead">
+        <p class="eyebrow" data-reveal>Au salon</p>
+        <h2 class="display h-lg" data-reveal style="--i:1">Ton <span class="serif">barbier.</span></h2>
+      </div>
+      <div class="crew">
+        {team.map((m, i) => (
+          <a href={m.name === 'UKCUT' ? site.bookingUk : site.booking} target="_blank" rel="noopener" data-reveal style={`--i:${i % 3}`} aria-label={`Réserver avec ${m.name}`}>
+            <span class="crew__hex">{m.name[0]}</span>
+            <Icon name="up" class="go" />
+            <span><b>{m.name}</b><span class="role">{m.role}</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap award">
+      <figure class="frame award__img" data-reveal>
+        <Image src={award} alt="UKCUT tenant sa plaque Choix du consommateur" widths={[360, 720, 934]} sizes="(min-width: 900px) 360px, 100vw" quality={78} loading="lazy" />
+      </figure>
+      <div style="display:grid;gap:16px">
+        <p class="eyebrow" data-reveal>Reconnaissance</p>
+        <h2 class="display h-lg" data-reveal style="--i:1">Choix du <span class="serif">consommateur.</span></h2>
+        <p class="lead muted" data-reveal style="--i:2">Une reconnaissance d’excellence remise au salon, et {site.reviewCount} avis clients pour une note de {site.rating} sur 5.</p>
+        <div data-reveal style="--i:3"><a class="link" href={site.reviews} target="_blank" rel="noopener">Lire les avis sur Fresha <Icon name="up" /></a></div>
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</Base>
